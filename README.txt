@@ -1,9 +1,4 @@
-AI NOTES AT THE BOTTOM
-
-Note to the Grader:
-
-We are working on this project as a combination final for AI and Software Design. As previously discussed with Amy, 
-we are using Processing (http://www.processing.org/) and not JSwing. 
+This project was a combination final for AI and Software Design.
 
 About Blokus: 
 http://lmgtfy.com/?q=blokus (let me google that for you Blokus)
@@ -13,12 +8,6 @@ Every player has 21 pieces for a total of 89 1x1 tiles. Every player begins with
 a score of -89, and for every piece that is placed on the board, her
 score increases by the number of 1x1 tiles that have been placed. The player with the
 highest score wins.
-
-Design pattern decisions: 
-
-THINGS TO ADDRESS:
-Design decisions like splitting up MVC
-AI decisions
 
 MODEL:
 Board: The board knows what color each of the 400 spots is. These are set by
@@ -36,7 +25,6 @@ This agent goes through all of its pieces in a specific order, which happens to
 be an order that favors playing larger pieces first, and plays those pieces in 
 the first legal move it finds, flipping and/or rotating them if necessary. As
 we discovered, this is not a bad strategy.
-
 
 VIEW:
 Board: The board is visually represented with a 20x20 grid and players can see 
@@ -65,7 +53,6 @@ split MVC as cleanly as possible, certain restrictions meant that we had to keep
 specific functions in the GUI. In terms of view, any object represented visually is 
 drawn here.  
 
-
 CONTROLLER:
 Controller - Our controller class controls as much as it can given Processing restrictions.
 It controls the players and board as much as possible and monitors gameplay. 
@@ -76,31 +63,10 @@ the appropriate places during gameplay.
 GUI - Any controlling that cannot happen in the controller is done in the GUI.
 
 
-
-
-**************************
-
-Additions for Andy:
-
-TO RUN THIS CODE: Import this zip file into Eclipse, and run GUI. 
-
-What's in it: Please see breakdown of our classes above
-
-What we did: First we built this game, with a "stupid" agent that played its pieces
-in a predetermined order and played them in the first available, legal spot, flipping
-and rotating them if necessary. This predetermined order played pieces in order of size
-from largest to smallest, which turned out not to actually be a bad strategy, but we 
-remain calling it "stupid", because it did not posess the knowledge to look ahead at what
-other players were up to. Avery and Leah eventually implemented LAgent2 (Leah + Avery + Agent),
-a game playing agent that uses minimax and looks ahead 3 plies, making much smarter moves. 
-LAgent2 uses two heuristics: One is the heuristic our stupid agent used - this heuristic 
-is used as a fallback. The second sums up all of the pieces that have been played or that
-have possible moves. 
-
 MOST IMPORTANT THINGS TO KNOW: 
-The controls! This is also in the how to play. Click and drag a piece to place it on the board
+The controls! (This is also in the how to play.) Click and drag a piece to place it on the board
 press space bar to flip and use the left and right arrow keys to rotate. Press enter to make
-your move. In the event that you think you can't, press P.
+your move. In the event that you think you can't, press p.
 
 OTHER IMPORTANT THING: LAGENT2 is the important LAgent to deal with. LAgent (original) had space
 issues when calculating a tree and so we had to try a different approach.
