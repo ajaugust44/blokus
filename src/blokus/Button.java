@@ -2,6 +2,8 @@ package blokus;
 
 import processing.core.PApplet;
 
+import static blokus.BlokusUtils.println;
+
 /**
  * Class for menu buttons
  * @author Avery Johnson
@@ -22,14 +24,12 @@ public class Button{
 	boolean selected;
 	PApplet parent;
 	boolean visible;
-	
-	
+
 	int[] colors;
 	boolean checkBox;
 	boolean checked;
 	
-	
-	public Button(int x, int y,  int w, int h, String title, int[] colors, boolean visible) {
+	public Button(int x, int y,  int w, int h, String title, int[] colors, boolean visible, PApplet parent) {
 		this.x = x;
 		this.y = y;
 		height = h;
@@ -42,8 +42,9 @@ public class Button{
 		
 		checkBox = false;
 		checked = false;
+        this.parent = parent;
 	}
-	
+
 	public int getColor() {
 		if(selected && !clicked && !(checkBox && checked)) {
 			return colors[1];
@@ -52,7 +53,36 @@ public class Button{
 		}
 		return colors[0];
 	}
-	
+
+    public void showButton() {
+        if(parent == null) {
+            println("No parent in button! " + this);
+            return;
+        }
+        parent.pushStyle();
+        //Only draw the button if it is supposed to currently be visible
+        if(isVisible()) {
+            parent.textSize(16);
+            parent.fill(getColor());
+            if(isChecked()) {
+                parent.strokeWeight(3);
+                parent.stroke(230);
+                parent.fill(100);
+            } else if (isCheckBox()) {
+                parent.fill(100);
+                parent.noStroke();
+            }
+            else {
+                parent.noStroke();
+            }
+            parent.rect(x, y, width, height, 5);
+            parent.fill(0);
+            parent.text(getName(), x+5, y + 20);
+        }
+        parent.popStyle();
+    }
+
+
 	public boolean isChecked() {
 		return checkBox && checked;
 	}
@@ -132,5 +162,10 @@ public class Button{
 	public boolean isCheckBox() {
 		return this.checkBox;
 	}
+
+    @Override
+    public String toString() {
+        return "Button: " + this.name;
+    }
 }
 	

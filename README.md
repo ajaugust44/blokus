@@ -4,7 +4,7 @@ This project was a combination final for AI and Software Design.
 Blokus is a board game for 2-4 players. The pieces looks sort of like [tetris pieces](https://cf.geekdo-images.com/images/pic112331_md.jpg), and are made up of one to five blocks.
 The goal of Blokus is to end up with fewer blocks in your hand than any of your opponents ([learn more](http://lmgtfy.com/?q=blokus)).
 
-### MODEL
+### Model
 The board keeps track of the color each of the 400 spots. These are set by
 the controller during gameplay and then this is output to the display so the 
 players can see where spots have been placed.

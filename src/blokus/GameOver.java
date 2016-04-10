@@ -1,5 +1,7 @@
 package blokus;
 
+import processing.core.PApplet;
+
 /**
  * Box that pops up when a game is over offering a new game to the player
  * @author Avery Johnson
@@ -10,19 +12,24 @@ package blokus;
 
 public class GameOver implements WindowBox {
 
+	public GameOver(PApplet parent) {
+		this.parent = parent;
+		newGameOK = new Button(480, 400, 40, 30, "OK", buttonColors, false, parent);
+		buttons = new Button[] {newGameOK};
+	}
+
+	PApplet parent;
 	int w = 200, h = 100;
 	int x = 500 - w/2, y = 400 - h/2;
 
 	boolean active = false;
 	int[][] rectangles = {{x,y,w,h}};
 	int[] buttonColors = {180, 200, 100};
-	Button newGameOK = new Button(480, 400, 40, 30, "OK", buttonColors, false);
-	Button[] buttons = {newGameOK};
+	Button newGameOK;
+	Button[] buttons;
 	String[] words = {"New Game?"};
 	int[][] wordXY= {{x + w/2 - 40, y + 20}};
 	int[] colors = null;
-
-
 
 	public boolean isActive() {
 		return active;

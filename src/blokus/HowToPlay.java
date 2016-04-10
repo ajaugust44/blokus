@@ -1,4 +1,7 @@
 package blokus;
+
+import processing.core.PApplet;
+
 /**
  * HowToPlay window for our Blokus game
  * @author Avery Johnson
@@ -11,6 +14,13 @@ package blokus;
 
 public class HowToPlay implements WindowBox {
 
+	public HowToPlay(PApplet parent) {
+		this.parent = parent;
+        OK = new Button(x + w/2 - 25, y+h - 60, 50, 30, "OK", colors, false, parent);
+        buttons = new Button[] {OK};
+	}
+
+	PApplet parent;
 	int h = 300;
 	int w = 800;
 	int x = 500 - w/2;
@@ -36,9 +46,8 @@ public class HowToPlay implements WindowBox {
 
 	int[][] wordXY = {{x+5, y+5, w-10, h},{x+5,y+5+150,w-10,h}};
 
-	Button OK = new Button(x + w/2 - 25, y+h - 60, 50, 30, "OK", colors, false);//x, y+h*2 -100, w, h-200, "OK", colors, false);
-	Button[] buttons = {OK};
-
+	Button OK;//x, y+h*2 -100, w, h-200, "OK", colors, false);
+	Button[] buttons;
 
 	boolean active = false;
 

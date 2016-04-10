@@ -1,4 +1,10 @@
 package blokus;
+
+import com.sun.javafx.beans.annotations.NonNull;
+import processing.core.PApplet;
+
+import static blokus.BlokusUtils.println;
+
 /**
  * NewGame window for Blokus game
  * @author Avery Johnson
@@ -9,6 +15,23 @@ package blokus;
  *
  */
 public class NewGame implements WindowBox {
+
+	public NewGame(@NonNull PApplet parent) {
+		this.parent = parent;
+        hmnBlue = new Button(buttonX,buttonY,buttonWidth,buttonHeight, "Human", buttonColors, false, parent);
+        cpuBlue = new Button(buttonX+100,buttonY,buttonWidth,buttonHeight, "CPU", buttonColors, false, parent);
+        hmnYellow = new Button(buttonX,buttonY + 80,buttonWidth,buttonHeight, "Human", buttonColors, false, parent);
+        cpuYellow = new Button(buttonX+100,buttonY + 80,buttonWidth,buttonHeight, "CPU", buttonColors, false, parent);
+        hmnRed = new Button(buttonX,buttonY + 160,buttonWidth,buttonHeight, "Human", buttonColors, false, parent);
+        cpuRed = new Button(buttonX+100,buttonY + 160,buttonWidth,buttonHeight, "CPU", buttonColors, false, parent);
+        hmnGreen = new Button(buttonX,buttonY + 240,buttonWidth,buttonHeight, "Human", buttonColors, false, parent);
+        cpuGreen = new Button(buttonX+100,buttonY + 240,buttonWidth,buttonHeight, "CPU", buttonColors, false, parent);
+        create = new Button (x+ w/2 - 20,y+h-40,60,30, "Create", colors, false, parent);
+
+        buttons = new Button[] {create, hmnBlue,cpuBlue,hmnYellow,cpuYellow,hmnRed,cpuRed,hmnGreen,cpuGreen};
+	}
+
+	PApplet parent;
 	int x = 300;
 	int y = 280;
 	int h = 410;
@@ -38,19 +61,18 @@ public class NewGame implements WindowBox {
 	
 	int[] buttonColors = {200, 200, 200};
 	
-	Button hmnBlue = new Button(buttonX,buttonY,buttonWidth,buttonHeight, "Human", buttonColors, false); 
-	Button cpuBlue = new Button(buttonX+100,buttonY,buttonWidth,buttonHeight, "CPU", buttonColors, false);
-	Button hmnYellow = new Button(buttonX,buttonY + 80,buttonWidth,buttonHeight, "Human", buttonColors, false); 
-	Button cpuYellow = new Button(buttonX+100,buttonY + 80,buttonWidth,buttonHeight, "CPU", buttonColors, false);
-	Button hmnRed = new Button(buttonX,buttonY + 160,buttonWidth,buttonHeight, "Human", buttonColors, false); 
-	Button cpuRed = new Button(buttonX+100,buttonY + 160,buttonWidth,buttonHeight, "CPU", buttonColors, false);
-	Button hmnGreen = new Button(buttonX,buttonY + 240,buttonWidth,buttonHeight, "Human", buttonColors, false); 
-	Button cpuGreen = new Button(buttonX+100,buttonY + 240,buttonWidth,buttonHeight, "CPU", buttonColors, false);
-	Button create = new Button (x+ w/2 - 20,y+h-40,60,30, "Create", colors, false);
+	Button hmnBlue;
+	Button cpuBlue;
+	Button hmnYellow;
+	Button cpuYellow;
+	Button hmnRed;
+	Button cpuRed;
+	Button hmnGreen;
+	Button cpuGreen;
+	Button create;
 	
-	Button[] buttons = {create, hmnBlue,cpuBlue,hmnYellow,cpuYellow,hmnRed,cpuRed,hmnGreen,cpuGreen};
-	
-	
+	Button[] buttons;
+
 	public int getX(){
 		return x;
 	}

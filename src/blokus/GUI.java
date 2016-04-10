@@ -3,35 +3,33 @@ import java.awt.event.KeyEvent;
 
 import processing.core.PApplet;
 
+/**
+ * BLOKUS
+ * @author Avery Johnson
+ * @author Leah Cole
+ * @author Gil Eisbruch
+ * @author Adrian Carpenter
+ * date: May 26th, 2014
+ */
 public class GUI extends PApplet{
-	/**
-	 * BLOKUS
-	 * @author Avery Johnson
-	 * @author Leah Cole
-	 * @author Gil Eisbruch
-	 * @author Adrian Carpenter
-	 * date: May 26th, 2014
-	 */
 	private static final long serialVersionUID = 1L;
 	Controller controller;
 	int windowX, windowY; //size of window
 	int bkgrdColor=color(230, 230, 235);
 
-	int[] buttonColors = {180, 200, 100};
-
 	//Make lists of buttons so we can iterate through them later
 	Button newGame, quit, howToPlay;
 	Button[] buttons;
 
-	GameOver gameover = new GameOver();
-	HowToPlay htp = new HowToPlay();
-	ExitView exitView = new ExitView();
-	NewGame newGameSetup = new NewGame();
+	GameOver gameover;
+	HowToPlay htp;
+	ExitView exitView;
+	NewGame newGameSetup;
 
-	WindowBox[] windows = {gameover, htp, exitView, newGameSetup};
+	WindowBox[] windows;
 
+    private boolean initializedWindows = false;
 
-	//From Avery
 	public final int[] BLUE = {color(60,60,160), color(90,90,190), 0};
 	public final int[] YELLOW = {color(225,225,40), color(255,255,70), 1};
 	public final int[] RED = {color(150, 50, 50), color(180, 80, 80), 2};
@@ -47,7 +45,7 @@ public class GUI extends PApplet{
 
 	//Relative coordinates of every piece
 	public final int[][][] pieceShapes = {
-			{{0,0},{0,1},{0,2},{0,3},{0,4}}, // "i"
+			{{0,0},{0,1},{0,2},{0,3},{0,4}}, // i
 			{{0,0},{0,1},{0,2},{0,3},{1,3}}, //l
 			{{0,0},{0,1},{1,1},{2,1},{2,0}}, //u
 			{{0,0},{1,0},{1,1},{1,2},{2,2}}, //z
@@ -113,11 +111,10 @@ public class GUI extends PApplet{
 	BlokusPiece selected;
 	int xOffset, yOffset;
 
-
 	int[] boardColors = {color(200), BLUE[0], YELLOW[0], RED[0], GREEN[0]};
 
 	//BOARD
-	public Board brd;
+    Board brd;
 
 	Player[] players;
 //	LAgent2[] players;
@@ -135,6 +132,13 @@ public class GUI extends PApplet{
 		size(windowX,windowY);
 
 		brd = new Board(this, boardColors);
+
+        gameover = new GameOver(this);
+        htp = new HowToPlay(this);
+        exitView = new ExitView(this);
+        newGameSetup = new NewGame(this);
+
+        windows = new WindowBox[] {gameover, htp, exitView, newGameSetup};
 
 		controller = new Controller(this);
 		players = controller.getPlayers();
@@ -155,12 +159,15 @@ public class GUI extends PApplet{
 		}
 		selected = pieces[0][pieces[0].length-1];
 		strokeJoin(ROUND);
+        initializedWindows = true;
 	}
 
 	/**
 	 * This is a built in method from Processing that constantly loops
 	 */
 	public void draw() {
+        if (! initializedWindows) return;
+
 		background(bkgrdColor);
 		showTurn();
 		showBoard(brd);
@@ -299,16 +306,10 @@ public class GUI extends PApplet{
 		int bX = 50;
 		int bY = 10;
 
-		newGame = new Button(bX, bY,  bWidth, bHeight, "New Game", buttonColors, true);
-		quit = new Button(width - bX - bWidth, bY, bWidth, bHeight, "Quit", buttonColors, true);
-		howToPlay = new Button(width/2-bWidth/2, bY,bWidth, bHeight, "How To Play", buttonColors, true);
-
-		int scoreHeight = 50, scoreWidth = 50;
-		int scoreX = brd.getX(), scoreY = brd.getY();
-
-		//		color(150, 50, 50), color(180, 80, 80), 2};
-		//		public final int[] GREEN = {color(50,150,50), color(80,180,80), 3};
-
+		int[] buttonColors = BlokusUtils.buttonColors();
+		newGame = new Button(bX, bY,  bWidth, bHeight, "New Game", buttonColors, true, this);
+		quit = new Button(width - bX - bWidth, bY, bWidth, bHeight, "Quit", buttonColors, true, this);
+		howToPlay = new Button(width/2-bWidth/2, bY,bWidth, bHeight, "How To Play", buttonColors, true, this);
 
 		Button[] gob = gameover.getButtons();
 		Button[] htpb = htp.getButtons();
@@ -397,40 +398,40 @@ public class GUI extends PApplet{
 		popStyle();
 	}
 
-	/**
-	 * This function draws a given button. It must be here instead of the
-	 * controller because of how processing works
-	 * @param b
-	 */
-	private void showButton(Button b) {
-		pushStyle();
-		//Only draw the button if it is supposed to currently be visible
-		if(b.isVisible()) {
-			int x, y, bwidth, bheight, c;
-			textSize(16);
-			c = b.getColor();
-			x = b.getX();
-			y = b.getY();
-			bwidth = b.getWidth();
-			bheight = b.getHeight();
-			fill(c);
-			if(b.isChecked()) {
-				strokeWeight(3);
-				stroke(230);
-				fill(100);
-			} else if (b.isCheckBox()) {
-				fill(100);
-				noStroke();
-			}
-			else {
-				noStroke(); 
-			}
-			rect(x, y, bwidth, bheight, 5);
-			fill(0);
-			text(b.getName(), x+5, y + 20);
-		}
-		popStyle();
-	}
+//	/**
+//	 * This function draws a given button. It must be here instead of the
+//	 * controller because of how processing works
+//	 * @param b
+//	 */
+//	private void showButton(Button b) {
+//		pushStyle();
+//		//Only draw the button if it is supposed to currently be visible
+//		if(b.isVisible()) {
+//			int x, y, bwidth, bheight, c;
+//			textSize(16);
+//			c = b.getColor();
+//			x = b.getX();
+//			y = b.getY();
+//			bwidth = b.getWidth();
+//			bheight = b.getHeight();
+//			fill(c);
+//			if(b.isChecked()) {
+//				strokeWeight(3);
+//				stroke(230);
+//				fill(100);
+//			} else if (b.isCheckBox()) {
+//				fill(100);
+//				noStroke();
+//			}
+//			else {
+//				noStroke();
+//			}
+//			rect(x, y, bwidth, bheight, 5);
+//			fill(0);
+//			text(b.getName(), x+5, y + 20);
+//		}
+//		popStyle();
+//	}
 
 	/**
 	 * Shows a blokus piece
@@ -545,7 +546,7 @@ public class GUI extends PApplet{
 		for(int i = 0; i < buttons.length; i++) {
 			b = buttons[i];
 			if(b.isVisible()) {
-				showButton(b);
+				b.showButton();
 				if (overButton(b)) {
 					b.setSelected(true);
 				}
