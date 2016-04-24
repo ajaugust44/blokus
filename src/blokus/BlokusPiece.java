@@ -1,6 +1,6 @@
 package blokus;
 
-import processing.core.PApplet;
+import static blokus.GUI.BLOCKSIZE;
 
 /**
  *Blokus piece class
@@ -24,12 +24,11 @@ public class BlokusPiece {
 	//first color is color when piece is unselected, second is when selected.
 	int[] colors; 
 	String id;
-	//we changed this from PApplet to GUI
 	GUI parent;
 	boolean clicked;
 	boolean selected;
 	//direction-- 1: default (in pieceList). 2: left 90 degs. 3: upside down. 4: right 90 degs.
-	int direction; 	
+	int direction;
 	int colorID;
 	boolean clickable;
 	boolean played;
@@ -38,7 +37,7 @@ public class BlokusPiece {
 	int y;
 	
 
-	public BlokusPiece(int[] colors,  String pieceID, GUI parent, int x, int y, boolean clickable)  {
+	public BlokusPiece(int[] colors, String pieceID, GUI parent, int x, int y)  {
 		id = pieceID;
 		this.parent = parent;
 		this.x = x;
@@ -52,30 +51,22 @@ public class BlokusPiece {
 		this.played = false;
 	}
 
-	
-	public int getSize() {
-		return size;
+    void showPiece() {
+		parent.pushStyle();
+		parent.fill(getColor(),180);
+		parent.strokeWeight(2);
+		parent.stroke(getColor() - 202020);
+		int x1, y1;
+        int[][] shape = parent.getShape(id);
+		shape = parent.flip(parent.rotate(shape, direction), direction);
+        for (int[] aShape : shape) {
+            x1 = x + BLOCKSIZE * aShape[0];
+            y1 = y + BLOCKSIZE * aShape[1];
+            parent.rect(x1, y1, BLOCKSIZE, BLOCKSIZE);
+        }
+		parent.popStyle();
 	}
 
-	public boolean isClickable() {
-		return !played && clickable;
-	}
-
-	public void setClickable(boolean clickable) {
-		this.clickable = clickable;
-	}
-
-	public boolean getClicked() {
-		return this.clicked;
-	}
-
-	public void click() {
-		this.clicked = true;
-	}
-
-	public void unclick() {
-		this.clicked = false;
-	}
 
 	public int getColor() {
 		if (selected)
@@ -83,38 +74,7 @@ public class BlokusPiece {
 		return colors[0];
 	}
 
-	public int getOrigColor(){
-		return colors[0];
-	}
-
-	public String getID() {
-		return id;
-	}
-	public void setID(String id) {
-		this.id = id;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getDirection() {
-		return direction;
-	}
-
-	public void setDirection(int dir) {
+	void setDirection(int dir) {
 		if (dir < 0) {
 			if(dir <= -5) dir = -1;
 		}
@@ -125,7 +85,7 @@ public class BlokusPiece {
 		this.direction = dir;
 	}
 
-	public void rotateLeft() {
+	void rotateLeft() {
 		if (clickable && !played) {
 			direction ++;
 			if (direction == 0) {
@@ -137,7 +97,7 @@ public class BlokusPiece {
 		}
 	}
 
-	public void rotateRight() {
+	void rotateRight() {
 		if (clickable && !played) {
 			direction --;
 			if (direction == 0) {
@@ -149,40 +109,68 @@ public class BlokusPiece {
 		}
 	}
 
-	public void flip() {
+	void flip() {
 		if (clickable && !played) {
 			direction = -direction;
 		}
 	}
-
-	public void deselect() {
+	void deselect() {
 		selected = false;
 	}
-
-	public void select() {
+	void select() {
 		selected = true;
 	}
-
-
-	public int getColorID() {
+	int getColorID() {
 		return colors[2];
 	}
-
-
-	public boolean isPlayed() {
+	boolean isPlayed() {
 		return played;
 	}
-
-
-	public void setPlayed(boolean played) {
+	void setPlayed(boolean played) {
 		this.played = played;
 	}
-
-
-	public int[] getColors() {
+	int[] getColors() {
 		return colors;
 	}
-
+    int getSize() {
+        return size;
+    }
+    boolean isClickable() {
+        return !played && clickable;
+    }
+    void setClickable(boolean clickable) {
+        this.clickable = clickable;
+    }
+    boolean getClicked() {
+        return this.clicked;
+    }
+    void click() {
+        this.clicked = true;
+    }
+    void unclick() {
+        this.clicked = false;
+    }
+    int getOrigColor(){
+        return colors[0];
+    }
+    String getID() {
+        return id;
+    }
+    public int getX() {
+        return x;
+    }
+    public void setX(int x) {
+        this.x = x;
+    }
+    public int getY() {
+        return y;
+    }
+    public void setY(int y) {
+        this.y = y;
+    }
+    int getDirection() {
+        return direction;
+    }
 }
 
 

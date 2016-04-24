@@ -1,5 +1,9 @@
 package blokus;
 
+import static blokus.BlokusUtils.err;
+import static blokus.Board.numBlocksHigh;
+import static blokus.Board.numBlocksWide;
+
 /**
  * Controller class for Blokus
  * @author Avery Johnson
@@ -8,7 +12,7 @@ package blokus;
  * @author Adrian Carpenter
  *
  */
-public class Controller{
+class Controller{
 
 	GUI parent;
 	Board board;
@@ -19,24 +23,21 @@ public class Controller{
 	public final int[] GREEN = {0x329632, 0x50B450, 3};
 	public final int BOARDCOLOR = 0xC8C8C8;
 
-
-	public final int BLOCKSIZE = 20;
-
-	int turn = 0;
+	private int turn = 0;
 	/*This boolean indicates whether or not a player has passed on his or her 
 	 * turn(can no longer make a legal move)
 	 */
-	boolean[] passed = {true, true, true, true};
+    private boolean[] passed = {true, true, true, true};
 	BlokusPiece[] lastMove = {null, null, null, null};
 	
 	int[] boardColors;
 
 	
-	Player[] players = {null, null, null, null};
+	private Player[] players = {null, null, null, null};
 	
 	BlokusPiece[][] pieces;
 	
-	public Controller(GUI parent){
+	Controller(GUI parent){
 		this.parent = parent;
 		this.board = parent.getBoard();
 		this.boardColors = board.getColors();
@@ -47,11 +48,10 @@ public class Controller{
 	 * This method resets the variables that should be reset when a new game
 	 * is started. 
 	 */
-	public void newGame(boolean[] human){
+    void newGame(boolean[] human){
 		GUI gui = this.parent;
 		//Reset passed to all falses
-		boolean newPassed[] = {false, false, false, false};
-		this.passed = newPassed;
+        this.passed = new boolean[]{false, false, false, false};
 		//Reset turn counter to 0
 		this.turn = 0;
 		//Reset the board in our gui
@@ -76,21 +76,21 @@ public class Controller{
 	 * Checks to see if players can make any more available moves.
 	 * @return true if all four players have passed
 	 */
-	public boolean gameOver() {
-		for(int i = 0; i< passed.length; i++) {
-			if (!passed[i]) {
-				return false;
-			}
-		}
+    boolean gameOver() {
+        for (boolean aPassed : passed) {
+            if (!aPassed) {
+                return false;
+            }
+        }
 		return true;
 	}
 	
 	/**
 	 * This method makes each player move if they have a possible legal move.
-	 * @param Player p
+	 *
 	 * @return true if a valid move has been made
 	 */
-	public boolean move(Player p) {
+	boolean move(Player p) {
 		if (turn != p.getColor()) {
 			System.out.println("Incorrect no no no");
 			return false;
@@ -114,18 +114,17 @@ public class Controller{
 	/**
 	 * Calculates the scores of each of the players based on what is left in
 	 * their hands
-	 * @return
+	 * @return scores
 	 */
-	public int[] calcScore(){
+    int[] calcScore(){
 		int[] scores = {0,0,0,0};
 		for(int i = 0; i<4;i++){
 			BlokusPiece[] hand = parent.pieces[i];
-			for(int p = 0;p<hand.length;p++){
-				BlokusPiece thisPiece = hand[p];
-				if (!thisPiece.played){
-					scores[i] -= thisPiece.getSize();
-				}
-			}
+            for (BlokusPiece thisPiece : hand) {
+                if (!thisPiece.played) {
+                    scores[i] -= thisPiece.getSize();
+                }
+            }
 		}
 		return scores;
 	}
@@ -137,120 +136,103 @@ public class Controller{
 	 * @param color
 	 * @return
 	 */
-	public boolean legalMove(int[][] spots, int color){
+    boolean legalMove(int[][] spots, int color){
 		int[][] brd = this.board.getBoard();
 		boolean cornerHit = false;
-		boolean sideHit = false;
-		boolean overlap = false;
 		boolean firstCorner = false;
-		for(int i = 0; i < spots.length;i++){
-			int[] currentSpot = spots[i];
-			int x = currentSpot[0];
-			int y = currentSpot[1];
+        for (int[] currentSpot : spots) {
+            int x = currentSpot[0];
+            int y = currentSpot[1];
 
-			//Part of the shape is out of bounds
-			if(x<0 || x>19 || y<0 || y>19) {
-				return false;
-			}
-			//if adjacent spot occupied by same color, then illegal move!
-			if(brd[y][x] != this.boardColors[0]){
-				overlap = true;
-				return false;
-			}
-			//Various cases for if a piece is on the edge of the board
-			if (y>0 && x>0){
-				if(y<19 && x<19){
-					//everything is in bounds.
-					//check for adjacency
-					if(brd[y+1][x] == color || brd[y-1][x] == color || brd[y][x+1] == color || brd[y][x-1] == color){
-						sideHit = true;
-						return false;
-					}
-					//check for corner of piece.
-					if(brd[y+1][x+1] == color || brd[y+1][x-1] == color || brd[y-1][x+1] == color || brd[y-1][x-1] == color){
-						cornerHit = true;
-					}
-				}else if(y<19){
-					//x is 19, y is in bounds.
-					//check for adjacency.
-					if(brd[y+1][x] == color || brd[y-1][x] == color || brd[y][x-1] == color){
-						sideHit = true;
-						return false;
-					}
-					//check for corner of piece.
-					if(brd[y+1][x-1] == color || brd[y-1][x-1] == color){
-						cornerHit = true;
-					}
-				}else if(x<19){
-					//y is 19, x is in bounds.
-					//check for adjacency
-					if(brd[y-1][x] == color || brd[y][x+1] == color || brd[y][x-1] == color){
-						sideHit = true;
-						return false;
-					}
-					//check for corner of piece.
-					if(brd[y-1][x+1] == color || brd[y-1][x-1] == color){
-						cornerHit = true;
-					}
+            if (x < 0 || x > 19 || y < 0 || y > 19) {
+                return false;
+            }
+            if (brd[y][x] != this.boardColors[0]) {
+                return false;
+            }
+            //Various cases for if a piece is on the edge of the board
+            if (y > 0 && x > 0) {
+                if (y < 19 && x < 19) {
+                    //everything is in bounds.
+                    //check for adjacency
+                    if (brd[y + 1][x] == color || brd[y - 1][x] == color || brd[y][x + 1] == color || brd[y][x - 1] == color) {
+                        return false;
+                    }
+                    //check for corner of piece.
+                    if (brd[y + 1][x + 1] == color || brd[y + 1][x - 1] == color || brd[y - 1][x + 1] == color || brd[y - 1][x - 1] == color) {
+                        cornerHit = true;
+                    }
+                } else if (y < 19) {
+                    //x is 19, y is in bounds.
+                    //check for adjacency.
+                    if (brd[y + 1][x] == color || brd[y - 1][x] == color || brd[y][x - 1] == color) {
+                        return false;
+                    }
+                    //check for corner of piece.
+                    if (brd[y + 1][x - 1] == color || brd[y - 1][x - 1] == color) {
+                        cornerHit = true;
+                    }
+                } else if (x < 19) {
+                    //y is 19, x is in bounds.
+                    //check for adjacency
+                    if (brd[y - 1][x] == color || brd[y][x + 1] == color || brd[y][x - 1] == color) {
+                        return false;
+                    }
+                    //check for corner of piece.
+                    if (brd[y - 1][x + 1] == color || brd[y - 1][x - 1] == color) {
+                        cornerHit = true;
+                    }
 
-				}else{
-					//y and x are both 19
-					//check for adjacency
-					firstCorner = true;
-					if(brd[y-1][x] == color || brd[y][x-1] == color){
-						sideHit = true;
-						return false;
-					}
-					//check for corner of piece.
-					if(brd[y-1][x-1] == color){
-						cornerHit = true;
-					}
-				}
-			}else if(y>0){
-				//x is 0
-				if(y<19){
-					//check for adjacency
-					if(brd[y+1][x] == color || brd[y-1][x] == color || brd[y][x+1] == color){
-						sideHit = true;
-						return false;
-					}
-					//check for corner of piece.
-					if(brd[y+1][x+1] == color || brd[y-1][x+1] == color){
-						cornerHit = true;
-					}
-				}else{
-					//19,0
-					firstCorner = true;
-				}
+                } else {
+                    //y and x are both 19
+                    //check for adjacency
+                    firstCorner = true;
+                    if (brd[y - 1][x] == color || brd[y][x - 1] == color) {
+                        return false;
+                    }
+                    //check for corner of piece.
+                    if (brd[y - 1][x - 1] == color) {
+                        cornerHit = true;
+                    }
+                }
+            } else if (y > 0) {
+                //x is 0
+                if (y < 19) {
+                    //check for adjacency
+                    if (brd[y + 1][x] == color || brd[y - 1][x] == color || brd[y][x + 1] == color) {
+                        return false;
+                    }
+                    //check for corner of piece.
+                    if (brd[y + 1][x + 1] == color || brd[y - 1][x + 1] == color) {
+                        cornerHit = true;
+                    }
+                } else {
+                    //19,0
+                    firstCorner = true;
+                }
 
 
-			}else if(x>0){
-				//y is 0. x is either 19, or in bounds.
-				if(x<19){
-					//check for adjacency
-					if(brd[y+1][x] == color || brd[y][x+1] == color || brd[y][x-1] == color){
-						sideHit = true;
-						return false;
-					}
-					//check for corner of piece.
-					if(brd[y+1][x+1] == color || brd[y+1][x-1] == color){
-						cornerHit = true;
-					}
-				}else{
-					//0,19
-					firstCorner = true;
-				}
-			}else{
-				//0,0
-				firstCorner = true;
-			}
-		}
-		if((cornerHit || firstCorner) && !sideHit && !overlap){
-
-			return true;
-		}else{
-			return false;
-		}
+            } else if (x > 0) {
+                //y is 0. x is either 19, or in bounds.
+                if (x < 19) {
+                    //check for adjacency
+                    if (brd[y + 1][x] == color || brd[y][x + 1] == color || brd[y][x - 1] == color) {
+                        return false;
+                    }
+                    //check for corner of piece.
+                    if (brd[y + 1][x + 1] == color || brd[y + 1][x - 1] == color) {
+                        cornerHit = true;
+                    }
+                } else {
+                    //0,19
+                    firstCorner = true;
+                }
+            } else {
+                //0,0
+                firstCorner = true;
+            }
+        }
+        return (cornerHit || firstCorner);
 
 	}
 	
@@ -259,7 +241,7 @@ public class Controller{
 	 * @param b
 	 * @return
 	 */
-	public boolean makeMove(BlokusPiece b) {
+    boolean makeMove(BlokusPiece b) {
 		System.out.println(b.getColorID() + ", " + turn);
 		//If it's not the correct players turn, don't make the move
 		if (turn != b.getColorID()) {
@@ -274,7 +256,7 @@ public class Controller{
 		int bX = bxy[0];
 		int bY = bxy[1];
 		//now, bX and bY should be 0-19 values.
-		if (bX >= 0 && bX < 20 && bY >= 0 && bY < 20) {
+		if (bX >= 0 && bX < numBlocksWide && bY >= 0 && bY < numBlocksHigh) {
 			//newLoc is the beginning location of [0,0] of piece shape.
 			int[] newLoc = {bX, bY};
 			int[][] pieceShape = parent.flip(parent.rotate(parent.getShape(b.getID()), b.getDirection()), b.getDirection());

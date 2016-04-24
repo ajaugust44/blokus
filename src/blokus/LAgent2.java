@@ -2,6 +2,9 @@ package blokus;
 
 import java.util.ArrayList;
 
+import static blokus.BlokusUtils.println;
+import static blokus.GUI.BLOCKSIZE;
+
 public class LAgent2 implements Player {
 
 	Controller controller;
@@ -10,10 +13,10 @@ public class LAgent2 implements Player {
 
 	/*This array corresponds with our blokus pieces and marks which direction
 	each of them is initially facing. */
-	public int[] pieceDirections = {1, 3, 2, 3, 2, 0, 3, 3, 3, 3, 3, 3, 1, 2, 3, 3, 0, 3, 1, 1, 0};
-	int round = 0;
+	private int[] pieceDirections = {1, 3, 2, 3, 2, 0, 3, 3, 3, 3, 3, 3, 1, 2, 3, 3, 0, 3, 1, 1, 0};
+	private int round = 0;
 
-	public int[] pieceSizes = {5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,3,3,2,1};
+	private int[] pieceSizes = {5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,3,3,2,1};
 	//5+5+5+5+5+5+5+5+5+5+5+5+4+4+4+4+4+3+3+2+1 == 89 is max score
 
 	public LAgent2(Controller controller, int color) {
@@ -21,12 +24,12 @@ public class LAgent2 implements Player {
 		this.board = controller.board.getSimpleBoard();
 		this.color = color;
 	}
-	int[] prevMove = null;
+	private int[] prevMove = null;
 
 	//Given a heuristic, it returns the higher of the two heuristics
-	int heuristic(int[][] state){
-		int h1 = h1(state);
-		int h2 = h2(state);
+	private int heuristic(int[][] state){
+		int h1 = heuristic1(state);
+		int h2 = heuristic2(state);
 		return Math.max(h1, h2);
 	}
 	
@@ -35,9 +38,9 @@ public class LAgent2 implements Player {
 	 * @param state
 	 * @return
 	 */
-	int h1(int[][] state){ 
+	private int heuristic1(int[][] state){
 		int[] scores = {0,0,0,0};
-		boolean[][] hands = {hexToHand(state[20][0]), hexToHand(state[20][1]), hexToHand(state[20][2]), hexToHand(state[20][3])}; 
+		boolean[][] hands = {hexToHand(state[20][0]), hexToHand(state[20][1]), hexToHand(state[20][2]), hexToHand(state[20][3])};
 		for(int i = 0; i<hands.length; i++) {
 			scores[i] = 89;
 			for(int j = 0; j<hands[i].length; j++) {
@@ -55,7 +58,7 @@ public class LAgent2 implements Player {
 	 * @param state
 	 * @return
 	 */
-	int h2(int[][] state) { //If I have a move for a shape w/ 5 blocks, add 5 to heuristic
+	private int heuristic2(int[][] state) { //If I have a move for a shape w/ 5 blocks, add 5 to heuristic
 		int[] vector = {0,0,0,0};
 		int turn = getTurn(state);
 		int[][] allMoves;
@@ -69,8 +72,8 @@ public class LAgent2 implements Player {
 					goodPieces[i][p] = true;
 				}
 			}
-			for(int p = 0; p< allMoves.length; p++) {
-				goodPieces[i][allMoves[p][0]] = true;
+			for (int[] allMove : allMoves) {
+				goodPieces[i][allMove[0]] = true;
 			}
 			for(boolean b : goodPieces[i]) {
 				if (b){
@@ -159,8 +162,7 @@ public class LAgent2 implements Player {
 			return b;
 		} else {
 			round ++;
-			BlokusPiece b = stupidMove(state, color);
-			return b;
+			return stupidMove(state, color);
 		}
 	}
 
@@ -199,13 +201,13 @@ public class LAgent2 implements Player {
 								}
 								if(controller.legalMove(spots, hand[i].getOrigColor())){
 									hand[i].setDirection(d);
-									newX = controller.board.getX() + 20 * x;
-									newY = controller.board.getY() + 20 * y;
+									newX = controller.board.getX() + BLOCKSIZE * x;
+									newY = controller.board.getY() + BLOCKSIZE * y;
+									println("NewX: " + newX + ", NewY: " + newY);
 									hand[i].setX(newX);
 									hand[i].setY(newY);
 									BlokusPiece b = hand[i];
-									prevMove = new int[] {controller.parent.getPieceIndex(b.getID()), b.getDirection(), x, y, b.getColorID()}; 
-
+									prevMove = new int[] {controller.parent.getPieceIndex(b.getID()), b.getDirection(), x, y, b.getColorID()};
 									return b;
 								}
 							}

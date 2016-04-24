@@ -10,74 +10,32 @@ import processing.core.PApplet;
  * @author Adrian Carpenter
  */
 
-public class GameOver implements WindowBox {
+public class GameOver extends WindowBox {
 
 	public GameOver(PApplet parent) {
+		w = 200;
+		h = 100;
+		x = 500 - w/2;
+		y = 400 - h/2;
+
+		active = false;
+		rectangles = new int[][]{{x, y, w, h}};
+		int[] buttonColors = {180, 200, 100};
+		words = new String[]{"New Game?"};
+		wordXY= new int[][]{{x + w / 2 - 40, y + 20}};
+		colors = null;
+
 		this.parent = parent;
-		newGameOK = new Button(480, 400, 40, 30, "OK", buttonColors, false, parent);
+		Button newGameOK = new Button(480, 400, 40, 30, "OK", buttonColors, false, parent);
 		buttons = new Button[] {newGameOK};
-	}
-
-	PApplet parent;
-	int w = 200, h = 100;
-	int x = 500 - w/2, y = 400 - h/2;
-
-	boolean active = false;
-	int[][] rectangles = {{x,y,w,h}};
-	int[] buttonColors = {180, 200, 100};
-	Button newGameOK;
-	Button[] buttons;
-	String[] words = {"New Game?"};
-	int[][] wordXY= {{x + w/2 - 40, y + 20}};
-	int[] colors = null;
-
-	public boolean isActive() {
-		return active;
-	}
-	public int getX() {
-		return x;
-	}
-	public int getY() {
-		return y;
-	}
-
-	public int getWidth() {
-		return w;
-	}
-
-	public int getHeight() {
-		return y;
-	}
-
-	public int[] getColors() {
-		return buttonColors;
-	}
-
-	public int[][] getRect() {
-		return rectangles;
-	}
-
-	public Button[] getButtons() {
-		return buttons;
-	}
-
-	public String[] getWords() {
-		return words;
-	}
-
-	public int[][] getWordXY() {
-		return wordXY;
 	}
 
 	public void setActive(boolean active) {
 		this.active = active;
 		if(!active) {
-			for(int b = 0; b<buttons.length; b++){
-				buttons[b].setVisible(false);
+			for (Button button : buttons) {
+				button.setVisible(false);
 			}
 		}
-	}
-	public int[][] getFillColors() {
-		return fillColors;
 	}
 }

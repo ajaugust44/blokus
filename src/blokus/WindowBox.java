@@ -1,5 +1,7 @@
 package blokus;
 
+import processing.core.PApplet;
+
 /**
  * Interface for menu boxes that pop up
  * @author Avery Johnson
@@ -9,7 +11,9 @@ package blokus;
  *
  */
 
-public interface WindowBox {
+public abstract class WindowBox {
+    PApplet parent;
+
 	int x = 0, y = 0, h = 0, w = 0, backgroundC = 0, textC = 0;
 	boolean active = false;
 	int[][] rectangles = null;
@@ -19,17 +23,41 @@ public interface WindowBox {
 	int[] colors = {180, 200, 100};
 	int[][] fillColors = null;
 	
-	int getX();
-	int getY();
-	int getWidth();
-	int getHeight();
-	int[] getColors();
-	int[][] getRect();
-	Button[] getButtons();
-	String[] getWords();
-	int[][] getWordXY();
-	int[][] getFillColors();
-	boolean isActive();
-	void setActive(boolean active);
+	int getX() {
+        return x;
+    }
+	int getY() {
+        return y;
+    }
+	int getWidth() {
+        return w;
+    }
+	int getHeight() {
+        return h;
+    }
+	int[] getColors() {
+        return colors;
+    }
+	int[][] getRect() {
+        return rectangles;
+    }
+    Button[] getButtons() {
+        return buttons;
+    }
+    String[] getWords() {
+        return words;
+    }
+	int[][] getWordXY() {
+        return wordXY;
+    }
+	int[][] getFillColors() {
+        return fillColors;
+    }
+	boolean isActive() {
+        return active;
+    }
+	void setActive(boolean active) {
+        this.active = active;
+    }
 
 }

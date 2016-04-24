@@ -12,4 +12,12 @@ class BlokusUtils {
     static void println(String s) {
         System.out.println(s);
     }
+
+    static void err(){
+        System.err.println();
+    }
+
+    static void err(String s) {
+        System.err.println(s);
+    }
 }

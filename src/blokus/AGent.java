@@ -1,7 +1,9 @@
 package blokus;
 import java.util.ArrayList;
-import java.awt.Component;
 import java.lang.Math;
+
+import static blokus.Board.numBlocksHigh;
+import static blokus.Board.numBlocksWide;
 
 public class AGent implements Player {
 	/**
@@ -203,7 +205,7 @@ public class AGent implements Player {
 			BlokusPiece[][] fakeHands = new BlokusPiece[4][21];
 			for(int k = 0;k<fakeHands.length;k++){
 				for(int j=0;j<fakeHands[k].length;j++){
-					BlokusPiece newPiece = new BlokusPiece(hands[k][j].getColors(), hands[k][j].getID(), controller.parent, hands[k][j].getX(), hands[k][j].getY(), hands[k][j].isClickable());
+					BlokusPiece newPiece = new BlokusPiece(hands[k][j].getColors(), hands[k][j].getID(), controller.parent, hands[k][j].getX(), hands[k][j].getY());
 					newPiece.setPlayed(hands[k][j].isPlayed());
 					fakeHands[k][j] = newPiece;
 				}
@@ -224,7 +226,7 @@ public class AGent implements Player {
 		BlokusPiece bestMove = null;
 		BlokusPiece[] fakeHand = new BlokusPiece[21];
 		for(int i = 0;i<fakeHand.length;i++){
-			BlokusPiece newPiece = new BlokusPiece(hands[this.color][i].getColors(), hands[this.color][i].getID(), controller.parent, hands[this.color][i].getX(), hands[this.color][i].getY(), hands[this.color][i].isClickable());
+			BlokusPiece newPiece = new BlokusPiece(hands[this.color][i].getColors(), hands[this.color][i].getID(), controller.parent, hands[this.color][i].getX(), hands[this.color][i].getY());
 			newPiece.setPlayed(hand[i].isPlayed());
 			fakeHand[i] = newPiece;
 		}
@@ -284,7 +286,7 @@ public class AGent implements Player {
 		BlokusPiece[][] fakeHands = new BlokusPiece[4][21];
 		for(int i = 0;i<fakeHands.length;i++){
 			for(int j=0;j<fakeHands[i].length;j++){
-				BlokusPiece newPiece = new BlokusPiece(hands[i][j].getColors(), hands[i][j].getID(), controller.parent, hands[i][j].getX(), hands[i][j].getY(), hands[i][j].isClickable());
+				BlokusPiece newPiece = new BlokusPiece(hands[i][j].getColors(), hands[i][j].getID(), controller.parent, hands[i][j].getX(), hands[i][j].getY());
 				newPiece.setPlayed(hands[i][j].isPlayed());
 				fakeHands[i][j] = newPiece;
 			}
@@ -350,7 +352,7 @@ public class AGent implements Player {
 		for(int i=0;i<possibleMoves.size();i++){
 			//copy the board, make the move on copied board, check heuristic
 			BlokusPiece thisPiece = possibleMoves.get(i);
-			int[][] thisBoard = new int[20][20];
+			int[][] thisBoard = new int[numBlocksHigh][numBlocksWide];
 			//copy the board
 			for (int x=0;x<thisBoard.length;x++){
 				for (int y=0;y<thisBoard[0].length;y++){
@@ -466,7 +468,7 @@ public class AGent implements Player {
 	
 	public BlokusPiece[][] createHands(int[][] currentBoard){
 		BlokusPiece[][] hands = new BlokusPiece[4][21];
-		for(int i = 20; i<currentBoard.length;i++) {
+		for(int i = numBlocksHigh; i<currentBoard.length;i++) {
 			for(int j = 0; j<currentBoard[i].length;j++) {
 				BlokusPiece thisPiece = this.hand[j];
 				if(currentBoard[i][j] == 1){
@@ -474,7 +476,7 @@ public class AGent implements Player {
 				}else{
 					thisPiece.setPlayed(true);
 				}
-				hands[i-20][j] = thisPiece;
+				hands[i-numBlocksHigh][j] = thisPiece;
 			}
 		}
 		return hands;
@@ -487,9 +489,9 @@ public class AGent implements Player {
 				state[i][j] = currentBoard[i][j];
 			}
 		}
-		for(int i = 20; i<currentBoard.length;i++) {
+		for(int i = numBlocksHigh; i<currentBoard.length;i++) {
 			for(int j = 0; j<currentBoard[i].length;j++) {
-				if(hands[i-20][j].isPlayed()){
+				if(hands[i-numBlocksHigh][j].isPlayed()){
 					state[i][j] = 0;
 				}else{
 					state[i][j] = 1;

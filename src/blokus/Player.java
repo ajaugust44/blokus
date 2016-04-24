@@ -6,7 +6,7 @@ package blokus;
  * @author Gil Eisbruch
  * @author Adrian Carpenter *
  */
-public interface Player {
+interface Player {
 	
 	int score = 0;
 	int color = 0;

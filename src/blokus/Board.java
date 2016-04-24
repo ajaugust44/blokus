@@ -1,6 +1,8 @@
 package blokus;
 import processing.core.PApplet;
 
+import static blokus.BlokusUtils.println;
+import static blokus.GUI.BLOCKSIZE;
 
 
 /**
@@ -13,38 +15,58 @@ import processing.core.PApplet;
  */
 
 
-public class Board{
+class Board{
+    final static int numBlocksWide = 20, numBlocksHigh = 20;
 	int x, y;
-	int height = 400, width = 400;
+	private int height = numBlocksHigh * BLOCKSIZE, width = numBlocksWide * BLOCKSIZE;
 	PApplet parent;
-	int[][] board = new int[20][20];
-	int[] colors;
-	int[][] simpleBoard = new int[20][20];
+	int[][] board = new int[numBlocksHigh][numBlocksWide];
+	private int[] colors;
+	int[][] simpleBoard = new int[numBlocksHigh][numBlocksWide];
 	
-	public Board(GUI parent, int[] colors){
+	Board(GUI parent, int[] colors){
 		this.x = parent.windowX/2 - width/2;
 		this.y = parent.windowY/2 - 2*height/3 + 50;
 		this.parent = parent;
 		this.colors = colors;
 		//Initialize each cell of Board.board to be boardcolor
-		for (int y = 0; y<20; y++) {
-			int[] row = new int[20];
-			for (int x = 0; x<20; x++) {
+		for (int y = 0; y<numBlocksHigh; y++) {
+			int[] row = new int[numBlocksWide];
+			for (int x = 0; x<numBlocksWide; x++) {
 				row[x] = colors[0];
 			}
 			board[y] = row;
 		}
 		//Initialize each cell of simpleBoard to be boardcolor
-		for (int y = 0; y<20; y++) {
-			int[] row = new int[20];
-			for (int x = 0; x<20; x++) {
+		for (int y = 0; y<numBlocksHigh; y++) {
+			int[] row = new int[numBlocksWide];
+			for (int x = 0; x<numBlocksWide; x++) {
 				row[x] = -1;
 			}
 			simpleBoard[y] = row;
 		}
 		
 	}
-	
+
+
+	/**
+	 * This can be called to draw the initial empty board. Loops through and
+	 * fills each square with its proper color
+	 */
+    void showBoard(){
+		parent.pushStyle();
+		parent.strokeWeight(1);
+		parent.stroke(150);
+		for (int y = 0; y<numBlocksHigh; y++) {
+			for (int x = 0; x<numBlocksWide; x++) {
+				int[] cor = getCoordinates(x,y);
+				parent.fill(board[y][x]); //fill each square with the color at that point in the array
+				parent.rect(cor[0],cor[1], BLOCKSIZE,BLOCKSIZE);
+			}
+		}
+		parent.popStyle();
+	}
+
 	/**
 	 * Board getter
 	 * @return
@@ -81,11 +103,13 @@ public class Board{
 	 * @param y
 	 * @return
 	 */
-	public int[] getBoardLocation(int x, int y) {
-		int col = (x - this.x)/20;
-		int row = (y - this.y)/20;
-		int[] result = {col, row};
-		return result;
+    int[] getBoardLocation(int x, int y) {
+        println("xPix: " + x + ", yPix: " + y);
+        println("boardX: " +this.x + " boardY: " + this.y);
+		int col = (x - this.x)/BLOCKSIZE;
+		int row = (y - this.y)/BLOCKSIZE;
+        println("Moving to board location: " + col +  ", " + row);
+        return new int[]{col, row};
 	}
 	
 	/**
@@ -96,10 +120,9 @@ public class Board{
 	 * @return
 	 */
 	public int[] getWindowLocation(int col, int row) {
-		int x = (col * 20) + this.x;
-		int y = (row * 20) + this.y;
-		int[] result = {x, y};
-		return result;
+		int x = (col * BLOCKSIZE) + this.x;
+		int y = (row * BLOCKSIZE) + this.y;
+        return new int[]{x, y};
 	}
 	
 	/**
@@ -110,8 +133,8 @@ public class Board{
 	 */
 	public int[] getCoordinates(int r, int c) {
 		int[] coords = new int[2];
-		coords[0] = (r * 20) + this.x;
-		coords[1] = (c * 20) + this.y;
+		coords[0] = (r * BLOCKSIZE) + this.x;
+		coords[1] = (c * BLOCKSIZE) + this.y;
 		return coords;
 	}
 
@@ -123,26 +146,26 @@ public class Board{
 		return y;
 	}
 
-	public int getHeight() {
+	int getHeight() {
 		return height;
 	}
 
-	public int getWidth() {
+	int getWidth() {
 		return width;
 	}
 
-	public int[] getColors() {
+	int[] getColors() {
 		return this.colors;
 	}
 
-	public int[][] getSimpleBoard() {
+	int[][] getSimpleBoard() {
 		return this.simpleBoard;
 	}
 
 	public String toString() {
 		String boardString = "";
-		for(int row = 0; row<20; row++) {
-			for(int col = 0; col < 20; col++){
+		for(int row = 0; row<numBlocksHigh; row++) {
+			for(int col = 0; col < numBlocksWide; col++){
 				boardString = boardString + simpleBoard[row][col] + "\t";
 			}
 			boardString = boardString + "\n";
