@@ -25,8 +25,8 @@ class Board{
 	int[][] simpleBoard = new int[numBlocksHigh][numBlocksWide];
 	
 	Board(GUI parent, int[] colors){
-		this.x = parent.windowX/2 - width/2;
-		this.y = parent.windowY/2 - 2*height/3 + 50;
+		this.x = parent.windowWidth /2 - width/2;
+		this.y = parent.windowHeight /2 - 2*height/3 + 50;
 		this.parent = parent;
 		this.colors = colors;
 		//Initialize each cell of Board.board to be boardcolor
