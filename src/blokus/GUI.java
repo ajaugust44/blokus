@@ -36,7 +36,7 @@ public class GUI extends PApplet{
 
 	final int BOARDCOLOR = color(200);
 
-	static final int BLOCKSIZE = 15;
+	static final int BLOCKSIZE = 20;
 
 	//These are the official names of blokus pieces[0]
 	final String[] pieceNames = {"i", "l", "u", "z", "t", "x", "w", "v", "f", "p", "y", "n",
@@ -104,6 +104,9 @@ public class GUI extends PApplet{
 	//BOARD
     private Board brd;
 
+	// Player trays
+	int[][] trays;
+
 	private Player[] players;
 //	LAgent2[] players;
 	
@@ -120,6 +123,7 @@ public class GUI extends PApplet{
 		size(windowWidth, windowHeight);
 
 		brd = new Board(this, boardColors);
+		initPlayerTrays();
 
         gameover = new GameOver(this);
         htp = new HowToPlay(this);
@@ -146,6 +150,27 @@ public class GUI extends PApplet{
 		selected = pieces[0][pieces[0].length-1];
 		strokeJoin(ROUND);
         initializedWindows = true;
+	}
+
+	private void initPlayerTrays() {
+		trays = new int[][] {
+			{		(int) (brd.getX() - (200 * (BLOCKSIZE/20.0))),
+                    (brd.getY() + brd.getHeight() + 5),
+					(int) (brd.getWidth() + (380 * (BLOCKSIZE/20.0))),
+					(int) (150 * (BLOCKSIZE/20.0))},
+			{       (int) (brd.getX() - (275 * (BLOCKSIZE/20.0))),
+                    brd.getY()-3,
+                    (int) (270 * (BLOCKSIZE/20.0)),
+                    brd.getHeight() + 3},
+			{       (int) (brd.getX() - (80 * (BLOCKSIZE/20.0))),
+                    (int) (brd.getY() - (150 * (BLOCKSIZE/20.0))),
+                    (int) (brd.getWidth() + (150 * (BLOCKSIZE/20.0))),
+                    (int) (145* (BLOCKSIZE/20.0))},
+			{       brd.getX() + brd.getWidth() + 5,
+                    brd.getY() - 3,
+                    (int) (270 * (BLOCKSIZE/20.0)),
+                    brd.getHeight() + 3}
+		};
 	}
 
 	/**
@@ -335,13 +360,7 @@ public class GUI extends PApplet{
 		pushStyle();
 		strokeWeight(0);
 		stroke(200);
-		int[][] rects = {
-				{brd.getX() - 200, brd.getY() + brd.getHeight() + 5, brd.getWidth() + 380, 150},
-				{brd.getX() - 275, brd.getY()-3, 270, brd.getHeight() + 3},
-				{brd.getX() - 80, brd.getY() - 150, brd.getWidth() + 150, 145},
-				{brd.getX() + brd.getWidth() + 5, brd.getY() - 3, 270, brd.getHeight() + 3}
-		};
-		for (int i = 0; i< rects.length; i++) {
+		for (int i = 0; i< trays.length; i++) {
 			if (i == controller.getTurn() && !controller.gameOver()) {
 				stroke(50);
 				strokeWeight(2);
@@ -350,7 +369,7 @@ public class GUI extends PApplet{
 				noStroke();
 				fill(200);
 			}
-			rect(rects[i][0],rects[i][1],rects[i][2], rects[i][3], 2);
+			rect(trays[i][0],trays[i][1],trays[i][2], trays[i][3], 2);
 		}
 		popStyle();
 	}
@@ -702,8 +721,6 @@ public class GUI extends PApplet{
 		if (bp.getX() > brd.getX()-(BLOCKSIZE/2) && bp.getX() < brd.getX()+ (BLOCKSIZE/2) + brd.getWidth() &&
 				bp.getY() > brd.getY()- (BLOCKSIZE/2) && bp.getY() < brd.getY() + (BLOCKSIZE/2) + brd.getHeight()) {
 			int[] loc = brd.getBoardLocation(bp.getX()+(BLOCKSIZE/2), bp.getY()+(BLOCKSIZE/2));
-
-            System.err.println("loc[0]: " + loc[0] + " loc[1] " + loc[1]);
 
 			bp.setX(brd.getX() + loc[0]*BLOCKSIZE);
 			bp.setY(brd.getY() + loc[1]*BLOCKSIZE);

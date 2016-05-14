@@ -2,8 +2,6 @@ package blokus;
 
 import processing.core.PApplet;
 
-import static blokus.BlokusUtils.println;
-
 /**
  * Class for menu buttons
  * @author Avery Johnson
@@ -56,7 +54,6 @@ public class Button{
 
     public void showButton() {
         if(parent == null) {
-            println("No parent in button! " + this);
             return;
         }
         parent.pushStyle();

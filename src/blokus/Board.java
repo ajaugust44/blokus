@@ -26,7 +26,7 @@ class Board{
 	
 	Board(GUI parent, int[] colors){
 		this.x = parent.windowWidth /2 - width/2;
-		this.y = parent.windowHeight /2 - 2*height/3 + 50;
+		this.y = parent.windowHeight/2 - 3*height/4 + 50;
 		this.parent = parent;
 		this.colors = colors;
 		//Initialize each cell of Board.board to be boardcolor
@@ -104,11 +104,8 @@ class Board{
 	 * @return
 	 */
     int[] getBoardLocation(int x, int y) {
-        println("xPix: " + x + ", yPix: " + y);
-        println("boardX: " +this.x + " boardY: " + this.y);
 		int col = (x - this.x)/BLOCKSIZE;
 		int row = (y - this.y)/BLOCKSIZE;
-        println("Moving to board location: " + col +  ", " + row);
         return new int[]{col, row};
 	}
 	

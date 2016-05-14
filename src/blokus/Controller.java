@@ -1,6 +1,5 @@
 package blokus;
 
-import static blokus.BlokusUtils.err;
 import static blokus.Board.numBlocksHigh;
 import static blokus.Board.numBlocksWide;
 

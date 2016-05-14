@@ -2,7 +2,6 @@ package blokus;
 
 import java.util.ArrayList;
 
-import static blokus.BlokusUtils.println;
 import static blokus.GUI.BLOCKSIZE;
 
 public class LAgent2 implements Player {
@@ -203,7 +202,6 @@ public class LAgent2 implements Player {
 									hand[i].setDirection(d);
 									newX = controller.board.getX() + BLOCKSIZE * x;
 									newY = controller.board.getY() + BLOCKSIZE * y;
-									println("NewX: " + newX + ", NewY: " + newY);
 									hand[i].setX(newX);
 									hand[i].setY(newY);
 									BlokusPiece b = hand[i];
